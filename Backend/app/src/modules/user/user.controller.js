@@ -29,29 +29,29 @@ export const signup = async (req, res, next) => {
   // create user
   const user = await User.create({ ...req.body, password: hashPassword }); // isConfirmed : false
 
-  user.activationExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
-  await user.save();
+  // user.activationExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+  // await user.save();
 
   // token
-  const token = jwt.sign({ email: user.email }, process.env.SECRET_KEY, {
-    expiresIn: "10m",
-  });
+  // const token = jwt.sign({ email: user.email }, process.env.SECRET_KEY, {
+  //   expiresIn: "10m",
+  // });
   // console.log(token);
 
   // const activationLink = `http://localhost:3000/user/activate/${token}`;
-  const activationLink = `https://task-flow-production-4bcc.up.railway.app/user/activate/${token}`;
-  const html = getActivationEmailHtml(activationLink, user.userName);
+  // const activationLink = `https://task-flow-production-4bcc.up.railway.app/user/activate/${token}`;
+  // const html = getActivationEmailHtml(activationLink, user.userName);
 
   // send email
-  const messageSent = await sendEmails({
-    to: user.email,
-    subject: "Account activation",
-    html,
-  });
-  if (!messageSent) {
-    await User.findByIdAndDelete(user._id);
-    return next(new Error("Email is invalid", { cause: 400 }));
-  }
+  // const messageSent = await sendEmails({
+  //   to: user.email,
+  //   subject: "Account activation",
+  //   html,
+  // });
+  // if (!messageSent) {
+  //   await User.findByIdAndDelete(user._id);
+  //   return next(new Error("Email is invalid", { cause: 400 }));
+  // }
 
   return res.status(200).json({
     success: true,
@@ -69,24 +69,24 @@ export const login = async (req, res, next) => {
   if (!match) return next(new Error("Incorrect password", { cause: 400 }));
 
   // check activation of account
-  if (!user.isConfirmed) {
-    const newToken = jwt.sign({ email: user.email }, process.env.SECRET_KEY, {
-      expiresIn: "10m",
-    });
-    user.activationExpires = new Date(Date.now() + 10 * 60 * 1000);
-    await user.save();
+  // if (!user.isConfirmed) {
+  //   const newToken = jwt.sign({ email: user.email }, process.env.SECRET_KEY, {
+  //     expiresIn: "10m",
+  //   });
+  //   user.activationExpires = new Date(Date.now() + 10 * 60 * 1000);
+  //   await user.save();
 
-    const activationLink = `http://localhost:3000/user/activate/${newToken}`;
-    const html = getActivationEmailHtml(activationLink, user.userName);
-    await sendEmails({ to: user.email, subject: "Account activation", html });
+  //   const activationLink = `http://localhost:3000/user/activate/${newToken}`;
+  //   const html = getActivationEmailHtml(activationLink, user.userName);
+  //   await sendEmails({ to: user.email, subject: "Account activation", html });
 
-    return next(
-      new Error(
-        "Account not activated. A new activation email has been sent — check your inbox.",
-        { cause: 403 },
-      ),
-    );
-  }
+  //   return next(
+  //     new Error(
+  //       "Account not activated. A new activation email has been sent — check your inbox.",
+  //       { cause: 403 },
+  //     ),
+  //   );
+  // }
 
   // Generate token
   const token = jwt.sign(
