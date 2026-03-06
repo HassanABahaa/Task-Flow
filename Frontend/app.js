@@ -7,7 +7,6 @@ const App = (() => {
       if (token) {
         const payload = JSON.parse(atob(token.split(".")[1]));
 
-        // ✅ احفظ الـ userId عشان نعرف مين صاحب التاسك
         window.currentUserId = payload.id;
 
         const email = payload.email || "";
@@ -26,7 +25,7 @@ const App = (() => {
     const themeIcon = document.getElementById("theme-icon");
     const themeLabel = document.getElementById("theme-label");
 
-    if (localStorage.getItem("theme") === "light") {
+    if (localStorage.getItem("theme") !== "dark") {
       document.body.classList.add("light-mode");
       themeIcon.className = "bi bi-moon";
       themeLabel.textContent = "Dark";
