@@ -101,16 +101,24 @@ const UserController = (() => {
   };
 
   // DELETE ACCOUNT
-  const handleDeleteAccount = async () => {
-    if (!confirm("Are you sure? This action cannot be undone.")) return;
-    try {
-      await ApiService.deleteUser();
-      ApiService.clearToken();
-      Utils.navigate("login-page");
-      Utils.toast("Account deleted", "info");
-    } catch (err) {
-      Utils.toast(err.message, "error");
-    }
+  const handleDeleteAccount = () => {
+    const modal = new bootstrap.Modal(
+      document.getElementById("confirmDeleteAccountModal"),
+    );
+    modal.show();
+
+    document.getElementById("confirm-delete-account-btn").onclick =
+      async () => {
+        try {
+          await ApiService.deleteUser();
+          ApiService.clearToken();
+          modal.hide();
+          Utils.navigate("login-page");
+          Utils.toast("Account deleted", "info");
+        } catch (err) {
+          Utils.toast(err.message, "error");
+        }
+      };
   };
 
   // SEND FORGET CODE
