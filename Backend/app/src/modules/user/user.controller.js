@@ -38,7 +38,8 @@ export const signup = async (req, res, next) => {
   });
   // console.log(token);
 
-  const activationLink = `http://localhost:3000/user/activate/${token}`;
+  // const activationLink = `http://localhost:3000/user/activate/${token}`;
+  const activationLink = `https://task-flow-production-4bcc.up.railway.app/user/activate/${token}`;
   const html = getActivationEmailHtml(activationLink, user.userName);
 
   // send email
