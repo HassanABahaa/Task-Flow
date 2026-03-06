@@ -255,3 +255,10 @@ export const resetPassword = async (req, res, next) => {
   });
   return res.json({ success: true, msg: "Try to login now!" });
 };
+
+export const getProfile = async (req, res, next) => {
+  return res.status(200).json({
+    success: true,
+    user: req.user,
+  });
+};

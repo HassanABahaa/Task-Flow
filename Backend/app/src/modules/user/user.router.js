@@ -19,14 +19,14 @@ const router = Router();
 router.post(
   "/signup",
   validation(signupSchema),
-  asyncHandler(userController.signup)
+  asyncHandler(userController.signup),
 );
 
 // login
 router.post(
   "/login",
   validation(loginSchema),
-  asyncHandler(userController.login)
+  asyncHandler(userController.login),
 );
 
 // change password
@@ -34,7 +34,7 @@ router.patch(
   "/changePassword",
   isAuthenticated,
   validation(changePasswordSchema),
-  asyncHandler(userController.changePassword)
+  asyncHandler(userController.changePassword),
 );
 
 // update user
@@ -42,21 +42,28 @@ router.patch(
   "/update",
   isAuthenticated,
   validation(updateUserSchema),
-  asyncHandler(userController.update)
+  asyncHandler(userController.update),
+);
+
+// get profile
+router.get(
+  "/profile",
+  isAuthenticated,
+  asyncHandler(userController.getProfile),
 );
 
 // delete user
 router.delete(
   "/delete",
   isAuthenticated,
-  asyncHandler(userController.deleteUser)
+  asyncHandler(userController.deleteUser),
 );
 
 // soft delete
 router.delete(
   "/softdelete",
   isAuthenticated,
-  asyncHandler(userController.softDelete)
+  asyncHandler(userController.softDelete),
 );
 
 // logout
@@ -66,21 +73,21 @@ router.post("/logout", userController.logout);
 router.get(
   "/activate/:token",
   validation(activationShema),
-  asyncHandler(userController.activateAccount)
+  asyncHandler(userController.activateAccount),
 );
 
 // send forget code
 router.patch(
   "/forgetcode",
   validation(forgetCodeSchema),
-  asyncHandler(userController.sendCode)
+  asyncHandler(userController.sendCode),
 );
 
 // reset password
 router.patch(
   "/resetpassword",
   validation(resetPasswordSchema),
-  asyncHandler(userController.resetPassword)
+  asyncHandler(userController.resetPassword),
 );
 
 export default router;

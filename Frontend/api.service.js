@@ -47,12 +47,14 @@ const ApiService = (() => {
     request("GET", `/task/tasks?page=${page}&limit=${limit}`, null, true);
   const getMyTask = () => request("GET", "/task/tasksoneuser", null, true);
   const getNotDone = () => request("GET", "/task/tasksnotnone", null, true);
+  const getProfile = () => request("GET", "/user/profile", null, true);
 
   return {
     signup,
     login,
     logout,
     updateUser,
+    getProfile,
     changePassword,
     deleteUser,
     sendCode,

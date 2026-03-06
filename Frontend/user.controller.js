@@ -8,8 +8,8 @@ const UserController = (() => {
       const data = Utils.formToObj("signup-form");
       await ApiService.signup(data);
 
-      Utils.showActivationNotice(data.email); // ← function جديدة هنعملها
-      setTimeout(() => Utils.navigate("login-page"), 6000);
+      Utils.toast("Account created! You can now log in.", "success");
+      setTimeout(() => Utils.navigate("login-page"), 1500);
     } catch (err) {
       Utils.toast(err.message, "error");
     } finally {
@@ -30,14 +30,15 @@ const UserController = (() => {
       document.getElementById("login-form").reset();
       App.initDashboard();
     } catch (err) {
-      const isNotActivated =
-        err.message?.toLowerCase().includes("not activated") ||
-        err.message?.toLowerCase().includes("not verified");
-      if (isNotActivated) {
-        Utils.showResendNotice(); // ← function جديدة هنعملها
-      } else {
-        Utils.toast(err.message, "error");
-      }
+      // const isNotActivated =
+      //   err.message?.toLowerCase().includes("not activated") ||
+      //   err.message?.toLowerCase().includes("not verified");
+      // if (isNotActivated) {
+      //   Utils.showResendNotice(); // ← function جديدة هنعملها
+      // } else {
+      //   Utils.toast(err.message, "error");
+      // }
+      Utils.toast(err.message, "error");
     } finally {
       Utils.setLoading(btn, false);
     }
@@ -147,6 +148,22 @@ const UserController = (() => {
     }
   };
 
+  const loadProfile = async () => {
+    try {
+      const res = await ApiService.getProfile();
+      const u = res.user;
+      const nameParts = (u.userName || "").split(" ");
+      document.querySelector("#update-profile-form [name='firstName']").value =
+        nameParts[0] || "";
+      document.querySelector("#update-profile-form [name='lastName']").value =
+        nameParts[1] || "";
+      document.querySelector("#update-profile-form [name='email']").value =
+        u.email || "";
+      document.querySelector("#update-profile-form [name='age']").value =
+        u.age || "";
+    } catch (_) {}
+  };
+
   // BIND EVENTS─
   const bindEvents = () => {
     document
@@ -173,6 +190,9 @@ const UserController = (() => {
     document
       .getElementById("reset-form")
       ?.addEventListener("submit", handleResetPassword);
+    document
+      .getElementById("editProfileModal")
+      ?.addEventListener("show.bs.modal", loadProfile);
   };
 
   return { bindEvents };
