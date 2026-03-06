@@ -5,7 +5,7 @@ export const signupSchema = joi
   .object({
     userName: joi
       .string()
-      .min(5)
+      .min(2)
       .max(20)
       .required()
       .pattern(/^[a-zA-Z\u0600-\u06FF\s]+$/)

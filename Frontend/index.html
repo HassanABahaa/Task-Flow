@@ -750,7 +750,7 @@
         <form id="signup-form" novalidate>
           <div class="form-group">
             <label class="form-label-custom">Username <span style="color:var(--danger)">*</span></label>
-            <input type="text" name="userName" class="form-input" placeholder="johndoe (5-20 chars)" required />
+            <input type="text" name="userName" class="form-input" placeholder="john doe (2-20 chars)" required />
           </div>
           <div class="form-group">
             <label class="form-label-custom">Email <span style="color:var(--danger)">*</span></label>
@@ -766,17 +766,12 @@
               <input type="password" name="confirmPass" class="form-input" placeholder="••••••••" required />
             </div>
             <div class="col-6">
-              <label class="form-label-custom">Age <span style="color:var(--text-muted)">(optional)</span></label>
+              <label class="form-label-custom">Age <span style="color:var(--danger)">*</span></label>
               <input type="number" name="age" class="form-input" placeholder="18–60" min="18" max="60" />
             </div>
-            <!-- ============================================================
-  STEP 1 — استبدل الـ gender col-6 في signup-form بالكود ده
-  ============================================================ -->
 
             <div class="col-6">
-              <label class="form-label-custom">
-                Gender <span style="color:var(--text-muted)">(optional)</span>
-              </label>
+              <label class="form-label-custom">Gender <span style="color:var(--danger)">*</span></label>
 
               <input type="hidden" name="gender" id="gender-value" value="" />
 
