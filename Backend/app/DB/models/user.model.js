@@ -2,17 +2,34 @@ import { Schema, model } from "mongoose";
 
 const userSchema = new Schema(
   {
-    userName: { type: String, required: true, min: 5, max: 20 },
-    email: { type: String, required: true, unique: true },
+    userName: {
+      type: String,
+      required: true,
+      minlength: 5,
+      maxlength: 20,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     password: { type: String, required: true },
     age: { type: Number, required: true, min: 18, max: 60 },
-    gender: String,
-    phone: { type: Number, unique: true },
+    gender: { type: String, enum: ["male", "female"] },
+    phone: { type: String, unique: true, sparse: true },
     isConfirmed: { type: Boolean, default: false },
-    forgetCode: { type: String, unique: true },
+    forgetCode: {
+      type: String,
+      unique: true,
+      sparse: true, // ← بيخلي MongoDB يتجاهل الـ null values في الـ index
+    },
     deleted: { type: Boolean, default: false },
+    activationExpires: { type: Date },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const User = model("User", userSchema);

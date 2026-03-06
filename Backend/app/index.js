@@ -5,6 +5,7 @@ import taskRouter from "./src/modules/task/task.router.js";
 import dotenv from "dotenv";
 import cors from "cors";
 
+import "./src/utils/cleanup.cron.js";
 dotenv.config();
 
 const app = express();
@@ -37,6 +38,18 @@ app.all("*", (req, res, next) => {
 
 // Global error handling
 app.use((error, req, res, next) => {
+  if (error.code === 11000) {
+    const field = Object.keys(error.keyValue)[0];
+    const messages = {
+      email: "This email is already registered",
+      phone: "This phone number is already exist",
+      userName: "This username is already exist",
+    };
+    return res.status(400).json({
+      success: false,
+      msg: messages[field] || "This value already exists",
+    });
+  }
   const statusCode = error.cause || 500;
   return res
     .status(statusCode)

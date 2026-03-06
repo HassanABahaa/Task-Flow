@@ -1,30 +1,37 @@
 import nodemailer from "nodemailer";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export async function sendEmails({ to, subject, html }) {
-  // transporter
-
   const transporter = nodemailer.createTransport({
-    host: "localhost",
-    port: 465,
-    secure: true,
     service: "gmail",
     auth: {
-      user: process.env.EMAIL, // sender  gmail email
-      pass: process.env.PASS, // password
+      user: process.env.EMAIL,
+      pass: process.env.PASS,
     },
   });
 
-  // receiver
-
   const info = await transporter.sendMail({
-    from: `"Saraha App" <${process.env.EMAIL}>`,
+    from: `"Task-Flow App" <${process.env.EMAIL}>`,
     to,
     subject,
     html,
   });
 
-  console.log({ info });
-
   if (info.accepted.length > 0) return true;
   return false;
+}
+
+// helper جديد للـ email template
+export function getActivationEmailHtml(activationLink, userName) {
+  let html = readFileSync(
+    join(__dirname, "../views/email-template.html"),
+    "utf-8",
+  );
+  return html
+    .replace(/{{ACTIVATION_LINK}}/g, activationLink)
+    .replace(/{{USER_NAME}}/g, userName || "there");
 }

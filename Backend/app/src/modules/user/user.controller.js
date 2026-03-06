@@ -2,24 +2,35 @@ import { User } from "../../../DB/models/user.model.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Token } from "../../../DB/models/token.model.js";
-import { sendEmails } from "../../utils/sendEmails.js";
+import { sendEmails, getActivationEmailHtml } from "../../utils/sendEmails.js";
+import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
 import randomstring from "randomstring";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const signup = async (req, res, next) => {
   const { userName, email, password, age, confirmPass, gender, phone } =
     req.body;
 
-  // Validation
+  const existingEmail = await User.findOne({ email });
+  if (existingEmail)
+    return next(new Error("This email is already registered", { cause: 400 }));
 
   // hashing password
   const hashPassword = bcryptjs.hashSync(
     req.body.password,
-    parseInt(process.env.SALT_ROUND)
+    parseInt(process.env.SALT_ROUND),
   );
   // req.body.password = hashPassword;
 
   // create user
   const user = await User.create({ ...req.body, password: hashPassword }); // isConfirmed : false
+
+  user.activationExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 min
+  await user.save();
 
   // token
   const token = jwt.sign({ email: user.email }, process.env.SECRET_KEY, {
@@ -27,13 +38,19 @@ export const signup = async (req, res, next) => {
   });
   // console.log(token);
 
+  const activationLink = `http://localhost:3000/user/activate/${token}`;
+  const html = getActivationEmailHtml(activationLink, user.userName);
+
   // send email
   const messageSent = await sendEmails({
     to: user.email,
     subject: "Account activation",
-    html: `<a href='http://localhost:3000/user/activate/${token}'>Activate your account </a>`,
+    html,
   });
-  if (!messageSent) return next(new Error("Email is invalid", { cause: 400 }));
+  if (!messageSent) {
+    await User.findByIdAndDelete(user._id);
+    return next(new Error("Email is invalid", { cause: 400 }));
+  }
 
   return res.status(200).json({
     success: true,
@@ -51,13 +68,29 @@ export const login = async (req, res, next) => {
   if (!match) return next(new Error("Incorrect password", { cause: 400 }));
 
   // check activation of account
-  if (!user.isConfirmed)
-    return next(new Error("You should activate your account"));
+  if (!user.isConfirmed) {
+    const newToken = jwt.sign({ email: user.email }, process.env.SECRET_KEY, {
+      expiresIn: "10m",
+    });
+    user.activationExpires = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save();
+
+    const activationLink = `http://localhost:3000/user/activate/${newToken}`;
+    const html = getActivationEmailHtml(activationLink, user.userName);
+    await sendEmails({ to: user.email, subject: "Account activation", html });
+
+    return next(
+      new Error(
+        "Account not activated. A new activation email has been sent — check your inbox.",
+        { cause: 403 },
+      ),
+    );
+  }
 
   // Generate token
   const token = jwt.sign(
-    { id: user._id, email: user.email },
-    process.env.SECRET_KEY
+    { id: user._id, email: user.email, userName: user.userName },
+    process.env.SECRET_KEY,
   );
 
   // save token in DB
@@ -78,13 +111,13 @@ export const changePassword = async (req, res, next) => {
   const compare = bcryptjs.compareSync(oldPass, req.user.password);
   if (!compare)
     return next(
-      new Error("New password not match old password ", { cause: 400 })
+      new Error("New password not match old password ", { cause: 400 }),
     );
 
   // Hashing new password
   const hashPassword = bcryptjs.hashSync(
     newPass,
-    parseInt(process.env.SALT_ROUND)
+    parseInt(process.env.SALT_ROUND),
   );
 
   await User.findByIdAndUpdate(req.user._id, { password: hashPassword });
@@ -102,7 +135,7 @@ export const update = async (req, res, next) => {
     {
       $set: { age, userName: `${firstName} ${lastName}`, email },
     },
-    { new: true }
+    { new: true },
   );
   if (!user) return next(new Error("User not found", { cause: 404 }));
 
@@ -124,7 +157,7 @@ export const softDelete = async (req, res, next) => {
   const user = await User.findByIdAndUpdate(
     req.user._id,
     { deleted: true },
-    { new: true }
+    { new: true },
   );
   return res.json({ user });
 };
@@ -133,7 +166,7 @@ export const logout = async (req, res, next) => {
   const { token } = req.headers;
   if (!token)
     return next(
-      new Error("Token missing! from logout function", { cause: 401 })
+      new Error("Token missing! from logout function", { cause: 401 }),
     );
   // change isValid value in the token model
   await Token.findOneAndUpdate({ token }, { isValid: false }, { new: true });
@@ -148,13 +181,20 @@ export const activateAccount = async (req, res, next) => {
   const payload = jwt.verify(token, process.env.SECRET_KEY);
 
   // update
-  const user = await User.findOneAndUpdate(
+  await User.findOneAndUpdate(
     { email: payload.email },
-    { isConfirmed: true },
-    { new: true }
+    {
+      isConfirmed: true,
+      $unset: { activationExpires: 1 },
+    },
+    { new: true },
   );
 
-  return res.send("Account activated successfully! Try to login in now");
+  const html = readFileSync(
+    join(__dirname, "../../views/activation-success.html"),
+    "utf-8",
+  );
+  return res.send(html);
 };
 
 export const sendCode = async (req, res, next) => {
@@ -201,7 +241,7 @@ export const resetPassword = async (req, res, next) => {
   // );
   user.password = bcryptjs.hashSync(
     req.body.password,
-    parseInt(process.env.SALT_ROUND)
+    parseInt(process.env.SALT_ROUND),
   );
   await user.save();
 

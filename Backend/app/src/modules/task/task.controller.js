@@ -4,12 +4,21 @@ import { User } from "../../../DB/models/user.model.js";
 export const addTask = async (req, res, next) => {
   let { title, description, status, assignTo, deadline } = req.body;
 
+  let assignToId = req.user._id;
+
+  if (assignTo) {
+    const assignedUser = await User.findOne({ email: assignTo });
+    if (!assignedUser)
+      return next(new Error("Assigned user not found", { cause: 404 }));
+    assignToId = assignedUser._id;
+  }
+
   const task = await Task.create({
     title,
     description,
     status,
     userId: req.user._id,
-    assignTo,
+    assignTo: assignToId,
     deadline,
   });
 
@@ -21,53 +30,47 @@ export const addTask = async (req, res, next) => {
 };
 
 export const update = async (req, res, next) => {
-  const { title, description, status, assignedTo } = req.body;
+  const { _id, title, description, status, assignTo } = req.body;
 
-  const task = await Task.findOneAndUpdate(
-    req.user.userId,
-    { title, description, status },
-    { new: true }
-  );
+  // دور على التاسك بالـ _id
+  const task = await Task.findById(_id);
+  if (!task) return next(new Error("Task not found", { cause: 404 }));
 
   // check owner
-  if (task.userId.toString() != req.user._id)
+  if (task.userId.toString() !== req.user._id.toString())
     return next(new Error("Task owner only can update", { cause: 403 }));
 
-  // Assing to another user
-  if (assignedTo) {
-    const assignedUser = await User.findById(assignedTo);
-    if (!assignedUser) {
+  // update fields
+  task.title = title;
+  task.description = description;
+  task.status = status;
+
+  // assign to user by email
+  if (assignTo) {
+    const assignedUser = await User.findOne({ email: assignTo });
+    if (!assignedUser)
       return next(new Error("Assigned user not found", { cause: 404 }));
-    }
-    task.assignTo = assignedTo;
+    task.assignTo = assignedUser._id;
   }
 
   await task.save();
 
-  // response
   return res.status(200).json({
     success: true,
-    msg: `Task updated successfully by ${req.user.userName}`,
+    msg: `Task updated successfully`,
     result: { task },
   });
 };
 
 export const deleteTask = async (req, res, next) => {
-  const task = await Task.findOne({ userId: req.user._id });
-  if (!task)
-    return next(
-      new Error("Task not found , User doesn't have tasks", { cause: 404 })
-    );
+  const { _id } = req.body;
 
-  console.log(task.userId.toString() !== req.user._id.toString());
-  console.log(task.userId);
-  console.log({ task });
+  const task = await Task.findById(_id);
+  if (!task) return next(new Error("Task not found", { cause: 404 }));
 
-  // check owner
   if (task.userId.toString() !== req.user._id.toString())
     return next(new Error("Owner only can delete task", { cause: 403 }));
 
-  // delete
   await task.deleteOne();
   return res
     .status(200)
@@ -75,19 +78,43 @@ export const deleteTask = async (req, res, next) => {
 };
 
 export const tasks = async (req, res, next) => {
-  const tasks = await Task.find().populate({
-    path: "userId",
-    select: { userName: 1, email: 1, _id: 0 },
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const total = await Task.countDocuments({
+    $or: [{ userId: req.user._id }, { assignTo: req.user._id }],
   });
-  return res.status(200).json({ success: true, tasks });
+
+  const tasks = await Task.find({
+    $or: [{ userId: req.user._id }, { assignTo: req.user._id }],
+  })
+    .populate({ path: "userId", select: { userName: 1, email: 1 } })
+    .populate({ path: "assignTo", select: { userName: 1, email: 1 } })
+    .skip(skip)
+    .limit(limit);
+
+  return res.status(200).json({
+    success: true,
+    tasks,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      hasNext: page < Math.ceil(total / limit),
+      hasPrev: page > 1,
+    },
+  });
 };
 
 export const tasksOneUser = async (req, res, next) => {
-  const tasksOneUser = await Task.findOne({ userId: req.user._id }).populate({
-    path: "userId",
-    select: { userName: 1, email: 1, _id: 0 },
-  });
-  return res.status(200).json({ task: tasksOneUser });
+  const tasks = await Task.find({
+    $or: [{ userId: req.user._id }, { assignTo: req.user._id }],
+  })
+    .populate({ path: "userId", select: { userName: 1, email: 1 } })
+    .populate({ path: "assignTo", select: { userName: 1, email: 1 } });
+  return res.status(200).json({ tasks });
 };
 
 export const tasksNotDone = async (req, res, next) => {
