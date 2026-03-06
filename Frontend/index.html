@@ -5,13 +5,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TaskFlow — Task Management</title>
-
-  <!-- Bootstrap 5 CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
     crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
   <style>
-    /* ─── CSS VARIABLES ─── */
     :root {
       --primary: #6C63FF;
       --primary-dark: #4B44CC;
@@ -26,7 +24,6 @@
       --text-primary: #FFFFFE;
       --text-secondary: #A7A5C0;
       --text-muted: #6B6882;
-      --border: rgba(108, 99, 255, 0.15);
       --glass: rgba(255, 255, 255, 0.04);
       --glass-border: rgba(255, 255, 255, 0.08);
       --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -34,6 +31,52 @@
       --radius: 16px;
       --radius-sm: 10px;
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ─── LIGHT MODE ─── */
+    body.light-mode {
+      --dark: #F0F0F7;
+      --dark-2: #FFFFFF;
+      --dark-3: #E8E8F0;
+      --dark-4: #D8D8E8;
+      --text-primary: #0F0E17;
+      --text-secondary: #4A4870;
+      --text-muted: #8885A0;
+      --glass: rgba(0, 0, 0, 0.02);
+      --glass-border: rgba(0, 0, 0, 0.08);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .navbar-custom {
+      background: rgba(240, 240, 247, 0.92);
+    }
+
+    body.light-mode .bg-mesh {
+      background:
+        radial-gradient(ellipse 80% 60% at 20% -10%, rgba(108, 99, 255, 0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255, 101, 132, 0.06) 0%, transparent 60%),
+        var(--dark);
+    }
+
+    body.light-mode .dropdown-menu {
+      background: #ffffff !important;
+    }
+
+    body.light-mode .modal-content {
+      background: #ffffff !important;
+    }
+
+    body.light-mode .toast-custom {
+      background: #ffffff;
+    }
+
+    body.light-mode select.form-input option {
+      background: #ffffff;
+      color: #0F0E17;
+    }
+
+    body.light-mode .btn-close {
+      filter: none !important;
     }
 
     * {
@@ -48,9 +91,9 @@
       color: var(--text-primary);
       min-height: 100vh;
       overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
     }
 
-    /* ─── BACKGROUND ─── */
     .bg-mesh {
       position: fixed;
       inset: 0;
@@ -60,6 +103,7 @@
         radial-gradient(ellipse 60% 40% at 80% 100%, rgba(255, 101, 132, 0.10) 0%, transparent 60%),
         var(--dark);
       pointer-events: none;
+      transition: background 0.3s;
     }
 
     .page {
@@ -80,6 +124,7 @@
       position: sticky;
       top: 0;
       z-index: 1000;
+      transition: background 0.3s;
     }
 
     .brand {
@@ -180,6 +225,7 @@
       max-width: 460px;
       box-shadow: var(--shadow);
       animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: background 0.3s;
     }
 
     .auth-card h2 {
@@ -242,6 +288,36 @@
       resize: vertical;
     }
 
+    /* ─── CUSTOM SELECT ─── */
+    .select-wrapper {
+      position: relative;
+    }
+
+    .select-wrapper::after {
+      content: '\F282';
+      font-family: 'bootstrap-icons';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      font-size: 0.85rem;
+    }
+
+    select.form-input {
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+
+    select.form-input:focus {
+      border-color: var(--primary);
+      background: var(--dark-4);
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+    }
+
     /* ─── STATS ─── */
     .stat-card {
       background: var(--dark-2);
@@ -265,7 +341,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+      font-size: 1.3rem;
       margin-bottom: 0.9rem;
     }
 
@@ -390,7 +466,6 @@
       color: #fff;
     }
 
-    /* ─── SECTION HEADER ─── */
     .section-header {
       display: flex;
       align-items: center;
@@ -404,7 +479,6 @@
       color: var(--text-primary);
     }
 
-    /* ─── GLASS CARD ─── */
     .glass-card {
       background: var(--glass);
       border: 1px solid var(--glass-border);
@@ -418,6 +492,7 @@
       border: 1px solid var(--glass-border) !important;
       border-radius: var(--radius) !important;
       color: var(--text-primary) !important;
+      transition: background 0.3s;
     }
 
     .modal-header {
@@ -449,6 +524,7 @@
       border: 1px solid var(--glass-border) !important;
       border-radius: 12px !important;
       padding: 0.4rem !important;
+      transition: background 0.3s;
     }
 
     .dropdown-item {
@@ -485,6 +561,7 @@
       gap: 0.6rem;
       animation: slideInRight 0.3s ease;
       box-shadow: var(--shadow);
+      transition: background 0.3s;
     }
 
     .toast-custom.success {
@@ -499,7 +576,7 @@
       border-left: 3px solid var(--primary);
     }
 
-    /* ─── EMPTY STATE ─── */
+    /* ─── MISC ─── */
     .empty-state {
       text-align: center;
       padding: 3.5rem 2rem;
@@ -512,7 +589,6 @@
       opacity: 0.4;
     }
 
-    /* ─── PROFILE AVATAR ─── */
     .profile-avatar {
       border-radius: 50%;
       background: linear-gradient(135deg, var(--primary), var(--accent));
@@ -524,7 +600,6 @@
       flex-shrink: 0;
     }
 
-    /* ─── DIVIDER ─── */
     .divider {
       display: flex;
       align-items: center;
@@ -542,7 +617,6 @@
       background: var(--glass-border);
     }
 
-    /* ─── SPINNER ─── */
     .spinner {
       width: 18px;
       height: 18px;
@@ -554,7 +628,6 @@
       vertical-align: middle;
     }
 
-    /* ─── SKELETON ─── */
     .skeleton {
       background: linear-gradient(90deg, var(--dark-3) 25%, var(--dark-4) 50%, var(--dark-3) 75%);
       background-size: 200% 100%;
@@ -603,7 +676,6 @@
       }
     }
 
-    /* ─── SCROLLBAR ─── */
     ::-webkit-scrollbar {
       width: 5px;
     }
@@ -621,7 +693,6 @@
       background: var(--primary);
     }
 
-    /* ─── RESPONSIVE ─── */
     @media (max-width: 768px) {
       .auth-card {
         padding: 1.8rem 1.3rem;
@@ -631,27 +702,25 @@
 </head>
 
 <body>
-
   <div class="bg-mesh"></div>
   <div id="toast-container" class="toast-container-custom"></div>
-
 
   <!-- ══════════ PAGE: LOGIN ══════════ -->
   <div id="login-page" class="page">
     <div class="auth-wrapper">
       <div class="auth-card">
         <div class="mb-4">
-          <p class="brand mb-2">Task<span>Flow</span></p>
-          <h2>Welcome back</h2>
-          <p class="auth-subtitle">Sign in to your account to continue</p>
+          <p class="brand mb-2 text-center">Task<span>Flow</span></p>
+          <h2 class="text-center">Welcome back</h2>
+          <p class="auth-subtitle text-center">Sign in to your account to continue</p>
         </div>
         <form id="login-form" novalidate>
           <div class="form-group">
-            <label class="form-label-custom">Email</label>
+            <label class="form-label-custom">Email <span style="color:var(--danger)">*</span></label>
             <input type="email" name="email" class="form-input" placeholder="you@example.com" required />
           </div>
           <div class="form-group">
-            <label class="form-label-custom">Password</label>
+            <label class="form-label-custom">Password <span style="color:var(--danger)">*</span></label>
             <input type="password" name="password" class="form-input" placeholder="••••••••" required />
           </div>
           <div class="d-flex justify-content-end mb-3">
@@ -669,48 +738,253 @@
     </div>
   </div>
 
-
   <!-- ══════════ PAGE: SIGNUP ══════════ -->
   <div id="signup-page" class="page page-hidden">
     <div class="auth-wrapper">
       <div class="auth-card">
         <div class="mb-4">
-          <p class="brand mb-2">Task<span>Flow</span></p>
-          <h2>Create account</h2>
-          <p class="auth-subtitle">Join TaskFlow and start managing your work</p>
+          <p class="brand mb-2 text-center">Task<span>Flow</span></p>
+          <h2 class="text-center">Create account</h2>
+          <p class="auth-subtitle text-center">Join TaskFlow and start managing your work</p>
         </div>
         <form id="signup-form" novalidate>
           <div class="form-group">
-            <label class="form-label-custom">Username</label>
+            <label class="form-label-custom">Username <span style="color:var(--danger)">*</span></label>
             <input type="text" name="userName" class="form-input" placeholder="johndoe (5-20 chars)" required />
           </div>
           <div class="form-group">
-            <label class="form-label-custom">Email</label>
+            <label class="form-label-custom">Email <span style="color:var(--danger)">*</span></label>
             <input type="email" name="email" class="form-input" placeholder="you@example.com" required />
           </div>
           <div class="row g-3">
             <div class="col-6">
-              <label class="form-label-custom">Password</label>
-              <input type="password" name="password" class="form-input" placeholder="Min 3 chars" required />
+              <label class="form-label-custom">Password <span style="color:var(--danger)">*</span></label>
+              <input type="password" name="password" class="form-input" placeholder="Min 8 chars" required />
             </div>
             <div class="col-6">
-              <label class="form-label-custom">Confirm Password</label>
+              <label class="form-label-custom">Confirm Password <span style="color:var(--danger)">*</span></label>
               <input type="password" name="confirmPass" class="form-input" placeholder="••••••••" required />
             </div>
             <div class="col-6">
-              <label class="form-label-custom">Age</label>
+              <label class="form-label-custom">Age <span style="color:var(--text-muted)">(optional)</span></label>
               <input type="number" name="age" class="form-input" placeholder="18–60" min="18" max="60" />
             </div>
+            <!-- ============================================================
+  STEP 1 — استبدل الـ gender col-6 في signup-form بالكود ده
+  ============================================================ -->
+
             <div class="col-6">
-              <label class="form-label-custom">Gender</label>
-              <select name="gender" class="form-input">
-                <option value="">Select</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
+              <label class="form-label-custom">
+                Gender <span style="color:var(--text-muted)">(optional)</span>
+              </label>
+
+              <input type="hidden" name="gender" id="gender-value" value="" />
+
+              <div class="dropdown w-100">
+
+                <!-- Toggle -->
+                <button type="button" id="gender-toggle"
+                  class="form-input d-flex align-items-center justify-content-between" data-bs-toggle="dropdown"
+                  data-bs-offset="0,4" aria-expanded="false" style="cursor:pointer; text-align:left; user-select:none;">
+                  <span id="gender-label" class="d-flex align-items-center gap-2" style="color:var(--text-muted);">
+                    <span style="width:26px;height:26px;background:var(--glass);border-radius:7px;
+                     display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                      <i class="bi bi-person" style="font-size:0.85rem;color:var(--text-muted);"></i>
+                    </span>
+                    <span>Select</span>
+                  </span>
+                  <i class="bi bi-chevron-down gender-chevron"
+                    style="font-size:0.72rem; color:var(--text-muted); transition:transform 0.25s; flex-shrink:0;"></i>
+                </button>
+
+                <!-- Dropdown Menu -->
+                <ul class="dropdown-menu gender-menu w-100">
+
+                  <!-- Not specified -->
+                  <!-- <li>
+                    <button type="button" class="dropdown-item gender-option d-flex align-items-center gap-2"
+                      data-value="" data-icon="bi-dash-circle" data-icon-bg="var(--dark-3)"
+                      data-icon-color="var(--text-muted)" data-label="Not specified">
+                      <span style="width:34px;height:34px;background:var(--dark-3);border-radius:10px;
+                       display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="bi bi-dash-circle" style="font-size:1rem;color:var(--text-muted);"></i>
+                      </span>
+                      <span class="flex-grow-1">
+                        <span class="gender-option-text d-block">Not specified</span>
+                      </span>
+                      <i class="bi bi-check2 gender-check"></i>
+                    </button>
+                  </li> -->
+
+                  <li>
+                    <div class="gender-divider"></div>
+                  </li>
+
+                  <!-- Male -->
+                  <li>
+                    <button type="button" class="dropdown-item gender-option d-flex align-items-center gap-2"
+                      data-value="male" data-icon="bi-person-standing" data-icon-bg="rgba(108,99,255,0.15)"
+                      data-icon-color="var(--primary)" data-label="Male">
+                      <span style="width:34px;height:34px;background:rgba(108,99,255,0.15);border-radius:10px;
+                       display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="bi bi-person-standing" style="font-size:1rem;color:var(--primary);"></i>
+                      </span>
+                      <span class="flex-grow-1">
+                        <span class="gender-option-text d-block">Male</span>
+                        <span class="gender-option-sub">He / Him</span>
+                      </span>
+                      <i class="bi bi-check2 gender-check"></i>
+                    </button>
+                  </li>
+
+                  <!-- Female -->
+                  <li>
+                    <button type="button" class="dropdown-item gender-option d-flex align-items-center gap-2"
+                      data-value="female" data-icon="bi-person-standing-dress" data-icon-bg="rgba(255,101,132,0.15)"
+                      data-icon-color="var(--accent)" data-label="Female">
+                      <span style="width:34px;height:34px;background:rgba(255,101,132,0.15);border-radius:10px;
+                       display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i class="bi bi-person-standing-dress" style="font-size:1rem;color:var(--accent);"></i>
+                      </span>
+                      <span class="flex-grow-1">
+                        <span class="gender-option-text d-block">Female</span>
+                        <span class="gender-option-sub">She / Her</span>
+                      </span>
+                      <i class="bi bi-check2 gender-check"></i>
+                    </button>
+                  </li>
+
+                </ul>
+              </div>
             </div>
+
+
+            <!-- ============================================================
+  STEP 2 — ضيف الـ CSS ده في نهاية الـ <style> block
+  ============================================================ -->
+            <style>
+              .gender-menu {
+                border: 1px solid var(--glass-border) !important;
+                border-radius: 14px !important;
+                padding: 8px !important;
+                box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2) !important;
+                background: var(--dark-2) !important;
+                margin-top: 6px !important;
+                animation: dropIn 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+              }
+
+              @keyframes dropIn {
+                from {
+                  opacity: 0;
+                  transform: translateY(-6px) scale(0.98);
+                }
+
+                to {
+                  opacity: 1;
+                  transform: translateY(0) scale(1);
+                }
+              }
+
+              .gender-option {
+                border-radius: 10px !important;
+                padding: 9px 10px !important;
+                transition: all 0.15s ease !important;
+                color: var(--text-primary) !important;
+                background: transparent !important;
+                border: 1px solid transparent !important;
+                margin-bottom: 3px;
+                width: 100%;
+              }
+
+              .gender-option:last-child {
+                margin-bottom: 0;
+              }
+
+              .gender-option:hover {
+                background: var(--glass) !important;
+                border-color: var(--glass-border) !important;
+                transform: translateX(3px);
+              }
+
+              .gender-option.active {
+                background: rgba(108, 99, 255, 0.08) !important;
+                border-color: rgba(108, 99, 255, 0.25) !important;
+              }
+
+              .gender-option.active .gender-check {
+                opacity: 1 !important;
+              }
+
+              .gender-option-text {
+                font-size: 0.88rem;
+                font-weight: 600;
+                color: var(--text-primary);
+              }
+
+              .gender-option-sub {
+                font-size: 0.72rem;
+                color: var(--text-muted);
+              }
+
+              .gender-check {
+                opacity: 0;
+                color: var(--primary);
+                font-size: 0.9rem;
+                transition: opacity 0.15s;
+                flex-shrink: 0;
+              }
+
+              .gender-divider {
+                height: 1px;
+                background: var(--glass-border);
+                margin: 5px 4px;
+              }
+            </style>
+
+
+
+            <script>
+              (function () {
+                const toggle = document.getElementById('gender-toggle');
+                const label = document.getElementById('gender-label');
+                const hidden = document.getElementById('gender-value');
+                const chevron = toggle?.querySelector('.gender-chevron');
+                const options = document.querySelectorAll('.gender-option');
+
+                if (!toggle) return;
+
+                toggle.addEventListener('show.bs.dropdown', () => {
+                  if (chevron) chevron.style.transform = 'rotate(180deg)';
+                });
+                toggle.addEventListener('hide.bs.dropdown', () => {
+                  if (chevron) chevron.style.transform = 'rotate(0deg)';
+                });
+
+                options.forEach(btn => {
+                  btn.addEventListener('click', () => {
+                    const val = btn.dataset.value;
+                    const icon = btn.dataset.icon;
+                    const iconBg = btn.dataset.iconBg;
+                    const iconClr = btn.dataset.iconColor;
+                    const text = btn.dataset.label;
+
+                    hidden.value = val;
+
+                    label.innerHTML = `
+        <span style="width:26px;height:26px;background:${iconBg};border-radius:7px;
+                     display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <i class="bi ${icon}" style="font-size:0.85rem;color:${iconClr};"></i>
+        </span>
+        <span style="color:var(--text-primary);font-size:0.88rem;font-weight:500;">${text}</span>`;
+
+                    options.forEach(o => o.classList.remove('active'));
+                    btn.classList.add('active');
+                  });
+                });
+              })();
+            </script>
             <div class="col-12">
-              <label class="form-label-custom">Phone</label>
+              <label class="form-label-custom">Phone <span style="color:var(--text-muted)">(optional)</span></label>
               <input type="text" name="phone" class="form-input" placeholder="01xxxxxxxxx" />
             </div>
           </div>
@@ -727,19 +1001,18 @@
     </div>
   </div>
 
-
   <!-- ══════════ PAGE: FORGET PASSWORD ══════════ -->
   <div id="forget-page" class="page page-hidden">
     <div class="auth-wrapper">
       <div class="auth-card">
         <div class="mb-4">
-          <p class="brand mb-2">Task<span>Flow</span></p>
-          <h2>Forgot password?</h2>
-          <p class="auth-subtitle">Enter your email to receive a reset code</p>
+          <p class="brand mb-2 text-center">Task<span>Flow</span></p>
+          <h2 class="text-center">Forgot password?</h2>
+          <p class="auth-subtitle text-center">Enter your email to receive a reset code</p>
         </div>
         <form id="forget-form" novalidate>
           <div class="form-group">
-            <label class="form-label-custom">Email</label>
+            <label class="form-label-custom">Email <span style="color:var(--danger)">*</span></label>
             <input type="email" name="email" class="form-input" placeholder="you@example.com" required />
           </div>
           <button type="submit" id="send-code-btn" class="btn-primary-custom w-100 mt-2" style="padding:.8rem">Send
@@ -754,7 +1027,6 @@
     </div>
   </div>
 
-
   <!-- ══════════ PAGE: RESET PASSWORD ══════════ -->
   <div id="reset-page" class="page page-hidden">
     <div class="auth-wrapper">
@@ -766,20 +1038,20 @@
         </div>
         <form id="reset-form" novalidate>
           <div class="form-group">
-            <label class="form-label-custom">Email</label>
+            <label class="form-label-custom">Email <span style="color:var(--danger)">*</span></label>
             <input type="email" name="email" id="reset-email" class="form-input" placeholder="you@example.com"
               required />
           </div>
           <div class="form-group">
-            <label class="form-label-custom">Reset Code</label>
+            <label class="form-label-custom">Reset Code <span style="color:var(--danger)">*</span></label>
             <input type="text" name="code" class="form-input" placeholder="12345" maxlength="5" required />
           </div>
           <div class="form-group">
-            <label class="form-label-custom">New Password</label>
+            <label class="form-label-custom">New Password <span style="color:var(--danger)">*</span></label>
             <input type="password" name="password" class="form-input" placeholder="••••••••" required />
           </div>
           <div class="form-group">
-            <label class="form-label-custom">Confirm New Password</label>
+            <label class="form-label-custom">Confirm New Password <span style="color:var(--danger)">*</span></label>
             <input type="password" name="confirmPass" class="form-input" placeholder="••••••••" required />
           </div>
           <button type="submit" id="reset-btn" class="btn-primary-custom w-100 mt-2" style="padding:.8rem">Reset
@@ -794,16 +1066,21 @@
     </div>
   </div>
 
-
   <!-- ══════════ PAGE: DASHBOARD ══════════ -->
   <div id="dashboard-page" class="page page-hidden">
 
-    <!-- NAVBAR -->
     <nav class="navbar-custom">
       <div class="container-fluid px-4 d-flex align-items-center justify-content-between">
         <span class="brand">Task<span>Flow</span></span>
-
         <div class="d-flex align-items-center gap-2 gap-md-3">
+
+          <!-- Theme Toggle -->
+          <button id="theme-toggle" class="btn-outline-custom d-flex align-items-center gap-2"
+            style="padding:0.4rem 0.9rem;font-size:0.82rem;">
+            <i class="bi bi-sun" id="theme-icon"></i>
+            <span id="theme-label">Light</span>
+          </button>
+
           <div class="d-none d-md-flex gap-2">
             <button id="view-all-btn" class="btn-outline-custom">All Tasks</button>
             <button id="view-my-btn" class="btn-outline-custom">My Task</button>
@@ -820,34 +1097,24 @@
                 style="font-size:.85rem;color:var(--text-secondary);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editProfileModal">✏️ Edit
-                  Profile</button>
-              </li>
-              <li>
-                <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#changePassModal">🔑 Change
-                  Password</button>
-              </li>
+              <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editProfileModal"><i
+                    class="bi bi-person-gear me-2"></i>Edit Profile</button></li>
+              <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#changePassModal"><i
+                    class="bi bi-shield-lock me-2"></i>Change Password</button></li>
               <li>
                 <hr class="dropdown-divider" style="border-color:var(--glass-border);margin:.3rem 0">
               </li>
-              <li>
-                <button id="delete-account-btn" class="dropdown-item" style="color:var(--danger)!important">🗑 Delete
-                  Account</button>
-              </li>
-              <li>
-                <button id="logout-btn" class="dropdown-item" style="color:var(--accent)!important">🚪 Logout</button>
-              </li>
+              <li><button id="delete-account-btn" class="dropdown-item" style="color:var(--danger)!important"><i
+                    class="bi bi-person-x me-2"></i>Delete Account</button></li>
+              <li><button id="logout-btn" class="dropdown-item" style="color:var(--accent)!important"><i
+                    class="bi bi-box-arrow-right me-2"></i>Logout</button></li>
             </ul>
           </div>
         </div>
       </div>
     </nav>
 
-    <!-- MAIN -->
     <div class="container-fluid px-4 py-4" style="max-width:1100px;margin:0 auto;">
-
-      <!-- Header -->
       <div class="mb-4">
         <h1 style="font-size:2rem;font-weight:800;letter-spacing:-0.5px;color:var(--text-primary)">
           Your <span style="color:var(--primary)">Tasks</span>
@@ -860,28 +1127,28 @@
       <div class="row g-3 mb-4">
         <div class="col-6 col-md-3">
           <div class="stat-card">
-            <div class="stat-icon purple">📋</div>
+            <div class="stat-icon purple"><i class="bi bi-kanban"></i></div>
             <div class="stat-value" id="stat-total">0</div>
             <div class="stat-label">Total Tasks</div>
           </div>
         </div>
         <div class="col-6 col-md-3">
           <div class="stat-card">
-            <div class="stat-icon yellow">⏳</div>
+            <div class="stat-icon yellow"><i class="bi bi-hourglass-split"></i></div>
             <div class="stat-value" id="stat-todo">0</div>
             <div class="stat-label">To Do</div>
           </div>
         </div>
         <div class="col-6 col-md-3">
           <div class="stat-card">
-            <div class="stat-icon pink">🔥</div>
+            <div class="stat-icon pink"><i class="bi bi-lightning-charge"></i></div>
             <div class="stat-value" id="stat-doing">0</div>
             <div class="stat-label">In Progress</div>
           </div>
         </div>
         <div class="col-6 col-md-3">
           <div class="stat-card">
-            <div class="stat-icon teal">✅</div>
+            <div class="stat-icon teal"><i class="bi bi-patch-check"></i></div>
             <div class="stat-value" id="stat-done">0</div>
             <div class="stat-label">Completed</div>
           </div>
@@ -894,27 +1161,21 @@
           <h5 class="section-title">Task Board</h5>
           <button class="btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addTaskModal">+ New Task</button>
         </div>
-
-        <!-- Mobile view buttons -->
         <div class="d-flex d-md-none gap-2 mb-3 flex-wrap">
-          <button id="view-all-btn-m" class="btn-outline-custom" onclick="TaskController.loadTasks()">All</button>
-          <button id="view-my-btn-m" class="btn-outline-custom" onclick="TaskController.loadMyTask()">Mine</button>
-          <button id="view-notdone-btn-m" class="btn-outline-custom"
-            onclick="TaskController.loadNotDone()">Overdue</button>
+          <button class="btn-outline-custom" onclick="TaskController.loadTasks()">All</button>
+          <button class="btn-outline-custom" onclick="TaskController.loadMyTask()">Mine</button>
+          <button class="btn-outline-custom" onclick="TaskController.loadNotDone()">Overdue</button>
         </div>
-
         <div class="filter-tabs">
           <button class="filter-tab active" data-filter="all">All</button>
           <button class="filter-tab" data-filter="toDo">To Do</button>
           <button class="filter-tab" data-filter="doing">Doing</button>
           <button class="filter-tab" data-filter="done">Done</button>
         </div>
-
         <div id="tasks-container"></div>
       </div>
     </div>
   </div>
-
 
   <!-- ══════════ MODAL: ADD TASK ══════════ -->
   <div class="modal fade" id="addTaskModal" tabindex="-1">
@@ -927,31 +1188,46 @@
         <div class="modal-body">
           <form id="add-task-form" novalidate>
             <div class="form-group">
-              <label class="form-label-custom">Title</label>
+              <label class="form-label-custom">Title <span style="color:var(--danger)">*</span></label>
               <input type="text" name="title" class="form-input" placeholder="Task title" required />
             </div>
             <div class="form-group">
-              <label class="form-label-custom">Description</label>
+              <label class="form-label-custom">Description <span style="color:var(--danger)">*</span></label>
               <textarea name="description" class="form-input" rows="3" placeholder="Describe the task..."
                 required></textarea>
             </div>
             <div class="row g-3">
               <div class="col-6">
-                <label class="form-label-custom">Status</label>
-                <select name="status" class="form-input">
-                  <option value="toDo">To Do</option>
-                  <option value="doing">Doing</option>
-                  <option value="done">Done</option>
-                </select>
+                <label class="form-label-custom">Status <span style="color:var(--danger)">*</span></label>
+                <!-- ✅ select-wrapper added -->
+                <div class="select-wrapper">
+                  <select name="status" class="form-input">
+                    <option value="toDo">To Do</option>
+                    <option value="doing">Doing</option>
+                    <option value="done">Done</option>
+                  </select>
+                </div>
               </div>
               <div class="col-6">
-                <label class="form-label-custom">Deadline</label>
+                <label class="form-label-custom">Deadline <span
+                    style="color:var(--text-muted)">(optional)</span></label>
                 <input type="date" name="deadline" class="form-input" />
               </div>
             </div>
             <div class="form-group mt-3">
-              <label class="form-label-custom">Assign To (User ID)</label>
-              <input type="text" name="assignTo" class="form-input" placeholder="MongoDB ObjectId" />
+              <label class="form-label-custom">Assign To (Email) <span
+                  style="color:var(--text-muted)">(optional)</span></label>
+              <input type="email" name="assignTo" class="form-input" placeholder="colleague@example.com" />
+              <div class="d-flex align-items-center gap-2 mt-2 px-2 py-2"
+                style="background:rgba(251,191,36,0.08);border-left:3px solid var(--warning);border-radius:0 6px 6px 0;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="var(--warning)"
+                  viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                  <path
+                    d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                </svg>
+                <small style="color:var(--warning);font-size:0.78rem;">Leave empty to assign to yourself</small>
+              </div>
             </div>
           </form>
         </div>
@@ -975,30 +1251,46 @@
           <form id="edit-task-form" novalidate>
             <input type="hidden" id="edit-task-id" name="_id" />
             <div class="form-group">
-              <label class="form-label-custom">Title</label>
+              <label class="form-label-custom">Title <span style="color:var(--danger)">*</span></label>
               <input type="text" id="edit-title" name="title" class="form-input" required />
             </div>
             <div class="form-group">
-              <label class="form-label-custom">Description</label>
+              <label class="form-label-custom">Description <span style="color:var(--danger)">*</span></label>
               <textarea id="edit-description" name="description" class="form-input" rows="3" required></textarea>
             </div>
             <div class="row g-3">
               <div class="col-6">
-                <label class="form-label-custom">Status</label>
-                <select id="edit-status" name="status" class="form-input">
-                  <option value="toDo">To Do</option>
-                  <option value="doing">Doing</option>
-                  <option value="done">Done</option>
-                </select>
+                <label class="form-label-custom">Status <span style="color:var(--danger)">*</span></label>
+                <!-- ✅ select-wrapper added -->
+                <div class="select-wrapper">
+                  <select id="edit-status" name="status" class="form-input">
+                    <option value="toDo">To Do</option>
+                    <option value="doing">Doing</option>
+                    <option value="done">Done</option>
+                  </select>
+                </div>
               </div>
               <div class="col-6">
-                <label class="form-label-custom">Deadline</label>
+                <label class="form-label-custom">Deadline <span
+                    style="color:var(--text-muted)">(optional)</span></label>
                 <input type="date" id="edit-deadline" name="deadline" class="form-input" />
               </div>
             </div>
             <div class="form-group mt-3">
-              <label class="form-label-custom">Assign To (User ID)</label>
-              <input type="text" id="edit-assignTo" name="assignTo" class="form-input" />
+              <label class="form-label-custom">Assign To (Email) <span
+                  style="color:var(--text-muted)">(optional)</span></label>
+              <input type="email" id="edit-assignTo" name="assignTo" class="form-input"
+                placeholder="colleague@example.com" />
+              <div class="d-flex align-items-center gap-2 mt-2 px-2 py-2"
+                style="background:rgba(251,191,36,0.08);border-left:3px solid var(--warning);border-radius:0 6px 6px 0;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="var(--warning)"
+                  viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                  <path
+                    d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                </svg>
+                <small style="color:var(--warning);font-size:0.78rem;">Leave empty to assign to yourself</small>
+              </div>
             </div>
           </form>
         </div>
@@ -1006,6 +1298,23 @@
           <button class="btn-outline-custom" data-bs-dismiss="modal">Cancel</button>
           <button id="edit-task-btn" class="btn-primary-custom" form="edit-task-form" type="submit">Save
             Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ MODAL: CONFIRM DELETE ══════════ -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-body text-center py-4">
+          <i class="bi bi-trash3" style="font-size:2rem;color:var(--danger);"></i>
+          <h6 class="mt-3 mb-1" style="font-weight:700;">Delete Task?</h6>
+          <p style="color:var(--text-secondary);font-size:0.85rem;margin:0">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer justify-content-center border-0 pt-0 pb-4">
+          <button class="btn-outline-custom" data-bs-dismiss="modal">Cancel</button>
+          <button id="confirm-delete-btn" class="btn-danger-custom px-4 py-2">Delete</button>
         </div>
       </div>
     </div>
@@ -1023,19 +1332,21 @@
           <form id="update-profile-form" novalidate>
             <div class="row g-3">
               <div class="col-6">
-                <label class="form-label-custom">First Name</label>
+                <label class="form-label-custom">First Name <span
+                    style="color:var(--text-muted)">(optional)</span></label>
                 <input type="text" name="firstName" class="form-input" placeholder="John" />
               </div>
               <div class="col-6">
-                <label class="form-label-custom">Last Name</label>
+                <label class="form-label-custom">Last Name <span
+                    style="color:var(--text-muted)">(optional)</span></label>
                 <input type="text" name="lastName" class="form-input" placeholder="Doe" />
               </div>
               <div class="col-12">
-                <label class="form-label-custom">Email</label>
+                <label class="form-label-custom">Email <span style="color:var(--danger)">*</span></label>
                 <input type="email" name="email" class="form-input" placeholder="you@example.com" required />
               </div>
               <div class="col-12">
-                <label class="form-label-custom">Age</label>
+                <label class="form-label-custom">Age <span style="color:var(--text-muted)">(optional)</span></label>
                 <input type="number" name="age" class="form-input" placeholder="18–60" min="18" max="60" />
               </div>
             </div>
@@ -1061,15 +1372,15 @@
         <div class="modal-body">
           <form id="change-pass-form" novalidate>
             <div class="form-group">
-              <label class="form-label-custom">Current Password</label>
+              <label class="form-label-custom">Current Password <span style="color:var(--danger)">*</span></label>
               <input type="password" name="oldPass" class="form-input" placeholder="••••••••" required />
             </div>
             <div class="form-group">
-              <label class="form-label-custom">New Password</label>
+              <label class="form-label-custom">New Password <span style="color:var(--danger)">*</span></label>
               <input type="password" name="newPass" class="form-input" placeholder="••••••••" required />
             </div>
             <div class="form-group">
-              <label class="form-label-custom">Confirm New Password</label>
+              <label class="form-label-custom">Confirm New Password <span style="color:var(--danger)">*</span></label>
               <input type="password" name="confirmPass" class="form-input" placeholder="••••••••" required />
             </div>
           </form>
@@ -1083,18 +1394,13 @@
     </div>
   </div>
 
-
-  <!-- ══════════ SCRIPTS ══════════ -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     crossorigin="anonymous"></script>
-
-
   <script src="api.service.js"></script>
   <script src="helpers.js"></script>
   <script src="user.controller.js"></script>
   <script src="task.controller.js"></script>
   <script src="app.js"></script>
-
 </body>
 
 </html>

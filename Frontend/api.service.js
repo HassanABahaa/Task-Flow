@@ -1,6 +1,6 @@
-// ─── API SERVICE (Model Layer) ───────────────────────────────────────────────
-const BASE_URL = "http://localhost:3000";
-const BEARER = "Route__"; // process.env.BEARER_KEY value
+//  API SERVICE (Model Layer)
+const BASE_URL = "https://task-flow-production-4bcc.up.railway.app";
+const BEARER = "Route__";
 
 const ApiService = (() => {
   const getToken = () => localStorage.getItem("token");
@@ -26,7 +26,7 @@ const ApiService = (() => {
     return data;
   };
 
-  // ── USER ──────────────────────────────────────────────
+  //  USER
   const signup = (body) => request("POST", "/user/signup", body, false);
   const login = (body) => request("POST", "/user/login", body, false);
   const logout = () => request("POST", "/user/logout", null, true);
@@ -38,11 +38,13 @@ const ApiService = (() => {
   const resetPassword = (body) =>
     request("PATCH", "/user/resetpassword", body, false);
 
-  // ── TASK ──────────────────────────────────────────────
+  //  TASK
   const addTask = (body) => request("POST", "/task/addtask", body, true);
   const updateTask = (body) => request("PATCH", "/task/update", body, true);
-  const deleteTask = () => request("DELETE", "/task/delete", null, true);
-  const getAllTasks = () => request("GET", "/task/tasks", null, true);
+  const deleteTask = (id) =>
+    request("DELETE", "/task/delete", { _id: id }, true);
+  const getAllTasks = (page = 1, limit = 10) =>
+    request("GET", `/task/tasks?page=${page}&limit=${limit}`, null, true);
   const getMyTask = () => request("GET", "/task/tasksoneuser", null, true);
   const getNotDone = () => request("GET", "/task/tasksnotnone", null, true);
 
