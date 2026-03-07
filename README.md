@@ -45,6 +45,8 @@ The long-term goal is to evolve it into a **multi-tenant SaaS platform** where e
 - 🔍 Advanced search and deadline filtering
 - 📈 Analytics and productivity reports per team
 
+---
+
 ## 🛠️ Tech Stack
 
 ### Backend
@@ -109,8 +111,8 @@ taskflow/
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/HassanABahaa/taskflow.git
-cd taskflow
+git clone https://github.com/HassanABahaa/Task-Flow.git
+cd Task-Flow
 ```
 
 ### 2. Install dependencies
