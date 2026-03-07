@@ -32,6 +32,19 @@ A full-stack web application that helps individuals and teams manage their daily
 
 ---
 
+## 🎯 Vision
+
+TaskFlow is currently a task management platform for individuals and teams.
+The long-term goal is to evolve it into a **multi-tenant SaaS platform** where each company gets their own isolated workspace — allowing teams to manage, assign, and track their tasks independently and securely.
+
+**Planned for future versions:**
+- 🏢 Multi-company support with isolated workspaces
+- 🔔 Real-time notifications when tasks are assigned
+- 💬 Task comments for team collaboration
+- 🏷️ Task priority levels (Low / Medium / High)
+- 🔍 Advanced search and deadline filtering
+- 📈 Analytics and productivity reports per team
+
 ## 🛠️ Tech Stack
 
 ### Backend
