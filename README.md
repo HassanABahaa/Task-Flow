@@ -11,7 +11,7 @@ A full-stack web application that helps individuals and teams manage their daily
 ---
 
 ## 📸 Preview
-<img width="1904" height="1066" alt="image" src="https://github.com/user-attachments/assets/2fe4e958-452b-4f48-84cb-4c290dcf223f" />
+<img width="1901" height="1059" alt="image" src="https://github.com/user-attachments/assets/65ffce78-3c8c-482e-a1c3-1a3d6b9a5dba" />
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/746dbea3-689f-4b78-b140-3ac0d4c776a0" />
 <img width="1855" height="867" alt="image" src="https://github.com/user-attachments/assets/c309af04-261d-4bcb-bf21-2f47e10b8d3d" />
 
