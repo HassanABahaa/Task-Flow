@@ -12,14 +12,14 @@ const app = express();
 const port = process.env.PORT;
 
 // CORS - لازم يكون أول حاجة
-// app.use(
-//   cors({
-//     origin: "*",
-//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-//     allowedHeaders: ["Content-Type", "token"],
-//   }),
-// );
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "token"],
+  }),
+);
+// app.use(cors());
 
 app.use(express.json());
 

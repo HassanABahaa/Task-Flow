@@ -24,7 +24,7 @@ const userSchema = new Schema(
     forgetCode: {
       type: String,
       unique: true,
-      sparse: true, // ← بيخلي MongoDB يتجاهل الـ null values في الـ index
+      sparse: true, //  بيخلي MongoDB يتجاهل الـ null values في الـ index
     },
     deleted: { type: Boolean, default: false },
     activationExpires: { type: Date },
